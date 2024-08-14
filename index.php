@@ -74,6 +74,7 @@ $router->post('/profile/contraseña', [ProfileController::class, 'actualizarpass
 
 // Solo Administrador
 $router->get('/admin/dashboard', [DashboardController::class, 'index']);
+$router->get('/admin/tablaUser', [DashboardController::class, 'tablaUser']);
 $router->get('/products/actualizarProducto', [ProductController::class, 'actualizarproducto']);
 $router->post('/products/actualizarProducto', [ProductController::class, 'actualizarproducto']);
 $router->get('/admin/products', [ProductController::class, 'verProductosAdmin']);
