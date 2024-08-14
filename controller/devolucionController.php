@@ -3,9 +3,6 @@
 require_once __DIR__ . "/../Router.php";
 require_once __DIR__ . "/../model/Ventas.php"; // Asegúrate de que el archivo de conexión esté incluido
 
-require_once __DIR__ . "/../Router.php";
-require_once __DIR__ . "/../model/Ventas.php"; // Asegúrate de que el archivo de conexión esté incluido
-
 class DevolucionController {
     public static function devolucion(Router $router) {
         $router->render('profile/devolucion', [
@@ -15,31 +12,36 @@ class DevolucionController {
 
     public static function procesarDevolucion(Router $router) {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $id_factura = $_POST['id_factura'];
+            // Sanitizar el ID de la factura
+            $id_factura = filter_var($_POST['id_factura'], FILTER_SANITIZE_NUMBER_INT);
 
             // Supongamos que el ID del usuario logueado está en la sesión
             session_start();
-            $id_usuario = $_SESSION['id']; // Asegúrate de que este valor se establece al iniciar sesión
+            $id_usuario = $_SESSION['id'] ?? null; // Asegúrate de que este valor se establece al iniciar sesión
 
-            // Llamar al método del modelo para procesar la devolución
-            $result = Ventas::procesarDevolucion($id_factura, $id_usuario);
+            if ($id_usuario) {
+                // Llamar al método del modelo para procesar la devolución
+                $result = Ventas::procesarDevolucion($id_factura, $id_usuario);
 
-            $mensaje = "";
-            if ($result->num_rows > 0) {
-                $factura = $result->fetch_assoc();
-                $fecha_facturacion = new DateTime($factura['fecha_facturacion']);
-                $fecha_actual = new DateTime();
-                $fecha_limite = clone $fecha_facturacion;
-                $fecha_limite->modify('+1 day');
+                $mensaje = "";
+                if ($result->num_rows > 0) {
+                    $factura = $result->fetch_assoc();
+                    $fecha_facturacion = new DateTime($factura['fecha_facturacion']);
+                    $fecha_actual = new DateTime();
+                    $fecha_limite = clone $fecha_facturacion;
+                    $fecha_limite->modify('+1 day');
 
-                // Validar si han pasado más de 1 día desde la fecha de facturación
-                if ($fecha_actual > $fecha_limite) {
-                    $mensaje = "No se puede realizar la devolución, ya ha pasado más de 1 día desde la fecha de facturación.";
+                    // Validar si han pasado más de 1 día desde la fecha de facturación
+                    if ($fecha_actual > $fecha_limite) {
+                        $mensaje = "No se puede realizar la devolución, ya ha pasado más de 1 día desde la fecha de facturación.";
+                    } else {
+                        $mensaje = "Por favor, empaca el producto y envíalo a la siguiente dirección: Calle 18 #28-50.";
+                    }
                 } else {
-                    $mensaje = "Por favor, empaca el producto y envíalo a la siguiente dirección: Calle 18 #28-50.";
+                    $mensaje = "No se encontró una factura con el ID proporcionado o no pertenece a tu cuenta.";
                 }
             } else {
-                $mensaje = "No se encontró una factura con el ID proporcionado o no pertenece a tu cuenta.";
+                $mensaje = "Error: No se ha encontrado información de usuario.";
             }
 
             // Renderizar la vista con el mensaje
@@ -50,4 +52,3 @@ class DevolucionController {
         }
     }
 }
-

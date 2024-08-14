@@ -36,12 +36,13 @@ class ProfileController {
         }
     
         $alertas = new Alerta;
-    
+        $resultado = '';
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $documento = $_POST['documento'] ?? '';
-            $nombre = $_POST['nombre'] ?? '';
-            $correo = $_POST['correo'] ?? '';
-            $foto_de_perfil = $_POST['foto_de_perfil'] ?? '';
+            $documento = filter_input(INPUT_POST, 'documento', FILTER_SANITIZE_STRING) ?? '';
+            $nombre = filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING) ?? '';
+            $correo = filter_input(INPUT_POST, 'correo', FILTER_SANITIZE_EMAIL) ?? '';
+            $foto_de_perfil = filter_input(INPUT_POST, 'foto_de_perfil', FILTER_SANITIZE_STRING) ?? '';
     
             // Asegúrate de que la sesión tenga el ID del usuario
             $id = $_SESSION['id'] ?? 0;
@@ -61,12 +62,13 @@ class ProfileController {
             'correo' => $user['correo']
         ]);
     }
+
     public static function eliminarcuenta(Router $router) {
         if (!isAuth()) {
             return header("Location: /404");
         }
     
-        $id = $_POST['id'] ?? null;
+        $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT) ?? null;
     
         if ($id === null) {
             return header("Location: /404"); // Redirige si no se proporciona un ID
@@ -88,9 +90,6 @@ class ProfileController {
             "title" => "Home",
         ]);
     }
- 
-
- 
 
     public static function actualizarpassword(Router $router) {
         if (!isAuth()) {
@@ -107,5 +106,4 @@ class ProfileController {
         ]);
     }
 }
-
 ?>

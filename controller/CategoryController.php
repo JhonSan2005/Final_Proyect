@@ -30,8 +30,8 @@ class CategoryController {
         $alertas = new Alerta;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id_categoria = $_POST['id_categoria'] ?? '';
-            $nombre_categoria = $_POST['nombre_categoria'] ?? '';
+            $id_categoria = filter_input(INPUT_POST, 'id_categoria', FILTER_SANITIZE_STRING) ?? '';
+            $nombre_categoria = filter_input(INPUT_POST, 'nombre_categoria', FILTER_SANITIZE_STRING) ?? '';
 
             $alertas->crearAlerta(empty($id_categoria), 'danger', 'El ID no puede ir vacío');
             $alertas->crearAlerta(empty($nombre_categoria), 'danger', 'El nombre no puede ir vacío');
@@ -78,7 +78,7 @@ class CategoryController {
             return header("Location: /404");
         }
     
-        $id_categoria = $_GET['id'] ?? null;
+        $id_categoria = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?? null;
     
         if ($id_categoria === null) {
             return header("Location: /404"); // Redirige si no se proporciona un ID
@@ -96,18 +96,19 @@ class CategoryController {
             "error" => $resultado === false ? "Error al eliminar la categoría" : null
         ]);
     }
+
     public static function actualizarCategoria(Router $router) {
         if (!isAuth()) {
             header("Location: /");
             exit;
         }
     
-        $id_categoria = $_GET['id'] ?? '';
+        $id_categoria = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?? '';
         $alertas = new Alerta;
         $resultado = '';
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nombre_categoria = $_POST['nombre_categoria'] ?? '';
+            $nombre_categoria = filter_input(INPUT_POST, 'nombre_categoria', FILTER_SANITIZE_STRING) ?? '';
     
             // Verificar si la categoría existe
             if (!Category::categoriaExiste($id_categoria)) {
@@ -141,7 +142,5 @@ class CategoryController {
             'categorias' => Category::verCategorias() // Pasar las categorías al formulario
         ]);
     }
-    
-
 }
 ?>

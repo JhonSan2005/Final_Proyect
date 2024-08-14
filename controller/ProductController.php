@@ -9,7 +9,7 @@ class ProductController
 {
     public static function index(Router $router)
     {
-        $id_categoria = $_GET['category'] ?? 'all';
+        $id_categoria = filter_input(INPUT_GET, 'category', FILTER_SANITIZE_STRING) ?? 'all';
     
         $productos = $id_categoria === 'all' ?
             Product::mostrarProductos() :
@@ -39,12 +39,12 @@ class ProductController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Guardamos en variables los datos del formulario para su posterior uso
-            $nombre_producto = filter_var($_POST['nombre_producto'] ?? '', FILTER_SANITIZE_STRING);
-            $precio = filter_var($_POST['precio'] ?? '', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-            $impuesto = filter_var($_POST['impuesto'] ?? '', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-            $stock = filter_var($_POST['stock'] ?? '', FILTER_SANITIZE_NUMBER_INT);
-            $id_categoria = filter_var($_POST['id_categoria'] ?? '', FILTER_SANITIZE_NUMBER_INT);
-            $descripcion = filter_var($_POST['descripcion'] ?? '', FILTER_SANITIZE_STRING);
+            $nombre_producto = filter_input(INPUT_POST, 'nombre_producto', FILTER_SANITIZE_STRING);
+            $precio = filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+            $impuesto = filter_input(INPUT_POST, 'impuesto', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+            $stock = filter_input(INPUT_POST, 'stock', FILTER_SANITIZE_NUMBER_INT);
+            $id_categoria = filter_input(INPUT_POST, 'id_categoria', FILTER_SANITIZE_NUMBER_INT);
+            $descripcion = filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_STRING);
 
             // Creamos las validaciones
             $alertas->crearAlerta(!$nombre_producto, 'danger', 'El nombre no puede ir vacío');
@@ -118,7 +118,7 @@ class ProductController
             return header("Location: /404");
         }
 
-        $id_producto = $_GET['id'] ?? null;
+        $id_producto = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?? null;
 
         if ($id_producto === null) {
             return header("Location: /404"); // Redirige si no se proporciona un ID
@@ -140,18 +140,18 @@ class ProductController
             exit;
         }
     
-        $id_producto = $_GET['id'] ?? '';
+        $id_producto = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?? '';
         $alertas = new Alerta;
         $resultado = '';
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nombre_producto = $_POST['nombre_producto'] ?? '';
-            $precio = $_POST['precio'] ?? '';
-            $impuesto = $_POST['impuesto'] ?? '';
-            $stock = $_POST['stock'] ?? '';
-            $id_categoria = (int)($_POST['id_categoria'] ?? 0);
-            $descripcion = $_POST['descripcion'] ?? '';
-            $imagen_url = $_POST['imagen_url'] ?? '';
+            $nombre_producto = filter_input(INPUT_POST, 'nombre_producto', FILTER_SANITIZE_STRING);
+            $precio = filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_STRING);
+            $impuesto = filter_input(INPUT_POST, 'impuesto', FILTER_SANITIZE_STRING);
+            $stock = filter_input(INPUT_POST, 'stock', FILTER_SANITIZE_STRING);
+            $id_categoria = filter_input(INPUT_POST, 'id_categoria', FILTER_SANITIZE_NUMBER_INT) ?? 0;
+            $descripcion = filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_STRING);
+            $imagen_url = filter_input(INPUT_POST, 'imagen_url', FILTER_SANITIZE_STRING) ?? '';
     
             if (isset($_FILES['imagen_producto']) && $_FILES['imagen_producto']['error'] === UPLOAD_ERR_OK) {
                 $imagen_url = 'ruta/a/la/imagen/' . basename($_FILES['imagen_producto']['name']);
@@ -201,9 +201,5 @@ class ProductController
             'categorias' => Category::verCategorias() // Pasar las categorías al formulario
         ]);
     }
-    
-    
-    
-    
 }
 ?>

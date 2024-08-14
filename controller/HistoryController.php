@@ -24,7 +24,8 @@ class HistoryController {
             exit();
         }
 
-        $usuarioId = $_SESSION['id'];
+        // Sanitizar el ID del usuario
+        $usuarioId = filter_var($_SESSION['id'], FILTER_SANITIZE_NUMBER_INT);
 
         // Obtener las compras del usuario utilizando la función separada
         $compras = VentasFactura::obtenerComprasUsuario($usuarioId);
@@ -41,20 +42,24 @@ class HistoryController {
             session_start();
         }
 
-        $usuarioId = $_SESSION['id']; // Obtén el ID del usuario actual desde la sesión
+        // Sanitizar el ID del usuario
+        $usuarioId = filter_var($_SESSION['id'], FILTER_SANITIZE_NUMBER_INT);
+
         $compras = [];
 
         // Obtén las facturas del usuario
         $facturas = VentasFactura::getFacturasByUsuarioId($usuarioId);
 
         foreach ($facturas as $factura) {
-            $productos = VentasFactura::getProductosByFacturaId($factura['id']);
-            $compras[$factura['id']] = [
-                'fecha_facturacion' => $factura['fecha_facturacion'],
-                'descripcion' => $factura['descripcion'],
-                'impuesto' => $factura['impuesto'],
-                'direccion_facturacion' => $factura['direccion_facturacion'],
-                'estado' => $factura['estado'],
+            // Sanitizar los datos de la factura
+            $facturaId = filter_var($factura['id'], FILTER_SANITIZE_NUMBER_INT);
+            $productos = VentasFactura::getProductosByFacturaId($facturaId);
+            $compras[$facturaId] = [
+                'fecha_facturacion' => filter_var($factura['fecha_facturacion'], FILTER_SANITIZE_STRING),
+                'descripcion' => filter_var($factura['descripcion'], FILTER_SANITIZE_STRING),
+                'impuesto' => filter_var($factura['impuesto'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
+                'direccion_facturacion' => filter_var($factura['direccion_facturacion'], FILTER_SANITIZE_STRING),
+                'estado' => filter_var($factura['estado'], FILTER_SANITIZE_STRING),
                 'productos' => $productos
             ];
         }
