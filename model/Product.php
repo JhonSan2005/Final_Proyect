@@ -42,16 +42,20 @@ class Product extends Conexion{
         return $resultado;
     }
 
-    public static function buscarPorParametro( string $parametroABuscar ) {
-        $conexion = Conexion::conectar();
-        $consulta = "SELECT * FROM `productos` WHERE `nombre_producto` LIKE '%$parametroABuscar%'";
-        $resultado = $conexion->query($consulta)->fetch_all(MYSQLI_ASSOC);
-
-        if( !$resultado ) return false;
-
-        return $resultado;
-
+    public static function buscarPorParametro($parametro) {
+        // Suponiendo que tienes una conexión a la base de datos
+        $conexion = Conexion::conectar(); // Cambié $db a $conexion
+        $parametro = "%" . $parametro . "%"; // Para hacer una búsqueda de tipo LIKE
+    
+        $stmt = $conexion->prepare("SELECT * FROM productos WHERE nombre_producto LIKE ? OR descripcion LIKE ?");
+        $stmt->bind_param("ss", $parametro, $parametro); // Uniendo el parámetro en ambas columnas
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
+
+
    
     public static function contarProductos() {
         $conexion = Conexion::conectar(); // Asegúrate de que la conexión esté configurada correctamente
