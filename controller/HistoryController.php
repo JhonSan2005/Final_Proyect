@@ -7,10 +7,14 @@ class HistoryController {
     
 
     public static function history(Router $router) {
-        $router->render('products/history', [
-            "title" => "Sobre Nosotros"
+        $router->render('historial/verHistorial', [
+            "title" => "Historial"
         ]);
     }
+  
+    
 
 }
+
+
 ?>

@@ -50,7 +50,6 @@ $router->get('/carrito', [CarritoController::class, 'index']);
 $router->get('/devolucion', [DevolucionController::class, 'devolucion']);
 $router->get('/history', [HistoryController::class, 'history']);
 $router->get('/formaPago', [VentaController::class, 'index']);
-$router->post('/api/venta', [VentaController::class, 'vender']);
 
 
 $router->post('/api/search-product', [CarritoController::class, 'obtenerInfoProducto']);
@@ -73,9 +72,15 @@ $router->post('/profile/verPerfil', [ProfileController::class, 'actualizar']); /
 $router->get('/profile/contraseña', [ProfileController::class, 'actualizarpassword']); 
 $router->post('/profile/contraseña', [ProfileController::class, 'actualizarpassword']); 
 
+$router->post('/api/venta', [VentaController::class, 'vender']);
+
 // Solo Administrador
 $router->get('/admin/dashboard', [DashboardController::class, 'index']);
 $router->get('/admin/tablaUser', [DashboardController::class, 'tablaUser']);
+
+$router->get('/admin/verHistorial', [HistoryController::class, 'history']);
+
+
 $router->get('/products/actualizarProducto', [ProductController::class, 'actualizarproducto']);
 $router->post('/products/actualizarProducto', [ProductController::class, 'actualizarproducto']);
 $router->get('/admin/products', [ProductController::class, 'verProductosAdmin']);
@@ -90,9 +95,6 @@ $router->get('/admin/agregarCategoria', [CategoryController::class, 'agregarCate
 $router->post('/admin/agregarCategoria', [CategoryController::class, 'agregarCategoria']); 
 $router->get('/categories/actualizarCategoria', [CategoryController::class, 'actualizarcategoria']);
 $router->post('/categories/actualizarCategoria', [CategoryController::class, 'actualizarcategoria']);
-
-
-
 
 // Verificar y ejecutar la ruta actual
 $router->verifyRoutes();

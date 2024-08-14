@@ -31,7 +31,7 @@ if ($conn->query($sql) === TRUE) {
 $conn->select_db($db_name);
 
 // Leer y ejecutar el archivo dump.sql
-$dump_file = 'dump.sql'; // Asegúrate de tener el archivo dump.sql en el mismo directorio
+$dump_file = 'bd_jj.sql'; // Asegúrate de tener el archivo dump.sql en el mismo directorio
 if (file_exists($dump_file)) {
     $sql = file_get_contents($dump_file);
     if ($conn->multi_query($sql)) {

@@ -21,7 +21,6 @@ class FormapagoController {
             "title" => "Forma de Pago"
         ]);
     }
-    
 }
 ?>
 

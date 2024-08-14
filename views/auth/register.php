@@ -8,25 +8,18 @@
         <div class="d-flex flex-column flex-md-row gap-3 border rounded-2 p-3 bg-white shadow">
 
             <!--------------------------- Cuadro izquierdo ----------------------------->
-            <div class="d-flex align-items-center">
-                <div class="featured-image p-3">
-                    <video controls autoplay class="img-fluid" style="width: auto;">
-                        <source src="mp3/trailer.mp4" type="video/mp4">
-                        Tu navegador no admite el elemento de video.
-                    </video>
-                </div>
-            </div>
+            <!-- Aquí puedes agregar el contenido del cuadro izquierdo si es necesario -->
 
             <!-------------------------- Caja derecha ---------------------------->
             <div class="p-3">
                 <div class="header-text mb-2">
-                    <h2 class="text-body-secondary">Registrate!</h2>
+                    <h2 class="text-body-secondary">¡Regístrate!</h2>
                     <p class="text-body-secondary">Es fácil y rápido</p>
                 </div>
 
                 <?php include_once __DIR__ . "/../../views/includes/alertaTemplate.php"; ?>
 
-                <form action="/register" method="POST">
+                <form id="registration-form" action="/register" method="POST">
                     <div class="input-group mb-2">
                         <input type="number" class="form-control form-control-lg bg-light fs-6" name="documento" placeholder="N° Documento" required>
                     </div>
@@ -37,21 +30,21 @@
                         <input type="email" class="form-control form-control-lg bg-light fs-6" name="correo" placeholder="Correo" required>
                     </div>
                     <div class="input-group mb-2">
-                        <input type="password" class="form-control form-control-lg bg-light fs-6" name="password" placeholder="password" required>
+                        <input type="password" class="form-control form-control-lg bg-light fs-6" name="password" placeholder="Password" required>
                     </div>
                     <div class="input-group mb-2">
-                        <input type="password" class="form-control form-control-lg bg-light fs-6" name="password_confirmation" placeholder="Vuelve a escribir tu password" required>
+                        <input type="password" class="form-control form-control-lg bg-light fs-6" name="password_confirmation" placeholder="Vuelve a escribir tu Password" required>
                     </div>
-                    <div class="input-group mb-2 d-flex ">
+                    <div class="input-group mb-2 d-flex">
                         <div class="form-check">
-                            <input type="checkbox" name="termsAndConditions" class="form-check-input" id="formCheck">
+                            <input type="checkbox" name="termsAndConditions" class="form-check-input" id="formCheck" required>
                             <label for="formCheck" class="form-check-label text-secondary custom-label">
                                 <small><a href="/terminos-y-condiciones">Acepto los Términos y Condiciones</a></small>
                             </label>
                         </div>
                     </div>
                     <!-- reCAPTCHA widget -->
-                    <div class="g-recaptcha" data-sitekey="6LfaIgwqAAAAAFjrowWPA5vbDBONVvx83AP2Iv9S"></div>
+                    <div class="g-recaptcha mb-3" data-sitekey="6LfaIgwqAAAAAFjrowWPA5vbDBONVvx83AP2Iv9S"></div>
                     <button type="submit" class="btn btn-lg btn-danger w-100 fs-6" style="background-color: #FF0000;">Registrarse</button>
                 </form>
             </div>
@@ -63,7 +56,7 @@
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('login-form');
+        const form = document.getElementById('registration-form');
 
         form.addEventListener('submit', function(event) {
             const recaptchaResponse = grecaptcha.getResponse();
@@ -74,4 +67,4 @@
             }
         });
     });
-    </script>
+</script>
