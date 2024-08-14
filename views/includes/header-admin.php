@@ -6,7 +6,7 @@
 
 <nav class="navbar navbar-expand-lg text-bg-danger">
   <div class="container-fluid">
-    <a class="navbar-brand logo" href="/">
+    <a class="navbar-brand logo" href="/admin/dashboard">
         <img src="/img/uploads/logol.png" alt="Logo Tienda">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

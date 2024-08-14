@@ -96,6 +96,13 @@ $router->post('/admin/agregarCategoria', [CategoryController::class, 'agregarCat
 $router->get('/categories/actualizarCategoria', [CategoryController::class, 'actualizarcategoria']);
 $router->post('/categories/actualizarCategoria', [CategoryController::class, 'actualizarcategoria']);
 
+$router->get('/misCompras', [HistoryController::class, 'verCompras']);
+
+$router->get('/profile/devolucion', [DevolucionController::class, 'devolucion']);
+$router->post('/procesarDevolucion', [DevolucionController::class, 'procesarDevolucion']);
+$router->get('/procesarDevolucion', [DevolucionController::class, 'procesarDevolucion']);
+
+
 // Verificar y ejecutar la ruta actual
 $router->verifyRoutes();
 ?>
