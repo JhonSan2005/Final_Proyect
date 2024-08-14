@@ -1,0 +1,44 @@
+DELIMITER $$
+CREATE TRIGGER actualizar_stock
+AFTER INSERT ON ventas
+FOR EACH ROW
+BEGIN
+    UPDATE productos
+    SET stock = stock - NEW.cantidad
+    WHERE id_producto = NEW.id_producto;
+END$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER validar_stock
+BEFORE INSERT ON ventas
+FOR EACH ROW
+BEGIN
+    DECLARE stock_disponible INT;
+    
+    SELECT stock INTO stock_disponible
+    FROM productos
+    WHERE id_producto = NEW.id_producto;
+    
+    IF stock_disponible < NEW.cantidad THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Stock insuficiente para la venta';
+    END IF;
+END$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER actualizar_estado_factura
+AFTER DELETE ON ventas
+FOR EACH ROW
+BEGIN
+    DECLARE productos_restantes INT;
+    
+    SELECT COUNT(*) INTO productos_restantes
+    FROM ventas
+    WHERE id_factura = OLD.id_factura;
+    
+    IF productos_restantes = 0 THEN
+        UPDATE factura
+        SET id_estado = (SELECT id FROM estado_factura WHERE estado = 'Cancelada')
+        WHERE id = OLD.id_factura;
+    END IF;
+END$$
+DELIMITER ;
