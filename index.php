@@ -77,6 +77,9 @@ $router->post('/api/venta', [VentaController::class, 'vender']);
 // Solo Administrador
 $router->get('/admin/dashboard', [DashboardController::class, 'index']);
 $router->get('/admin/tablaUser', [DashboardController::class, 'tablaUser']);
+$router->post('/admin/tablaUser', [DashboardController::class, 'eliminarUsuarioAdmin']);
+
+
 
 
 $router->get('/products/actualizarProducto', [ProductController::class, 'actualizarproducto']);

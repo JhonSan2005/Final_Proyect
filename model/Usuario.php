@@ -37,15 +37,15 @@ class Usuario extends Conexion {
 
 
 
-    public static function actualizarUsuario($documento, $nombre, $correo, $foto_perfil, $id) {
+    public static function actualizarUsuario($documento, $nombre, $correo, $password, $id) {
         $conexion = self::conectar();
-        $consulta = $conexion->prepare("UPDATE usuario SET documento=?, nombre=?, correo=?, foto_perfil=? WHERE id=?");
-        $consulta->bind_param('ssssi', $documento, $nombre, $correo, $foto_perfil, $id);
+        $consulta = $conexion->prepare("UPDATE usuario SET documento=?, nombre=?, correo=?, password=? WHERE id=?");
+        $consulta->bind_param('ssssi', $documento, $nombre, $correo, $password, $id);
         $resultado = $consulta->execute();
         
         return $resultado;
     }
-
+    
     public static function eliminarcuentauser($id) {
         $conexion = self::conectar();
         $consulta = $conexion->prepare("DELETE FROM usuario WHERE id = ?");
@@ -103,5 +103,18 @@ class Usuario extends Conexion {
         $row = $stmt->fetch();
         return $row ? $row['id_rol'] : null;
     }
+    public static function eliminarUsuarioAdmin($documento) {
+        $conexion = Conexion::conectar();
+        $query = "DELETE FROM usuario WHERE documento = '$documento' AND id_rol = 2 LIMIT 1";
+        $resultado = $conexion->query($query);
+    
+        if (!$resultado) {
+            die("Error en la consulta: " . $conexion->error);
+        }
+    
+        return $resultado;
+    }
+    
+    
 }
 ?>

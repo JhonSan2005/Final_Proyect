@@ -26,6 +26,7 @@ if (!$result_usuarios) {
                                     <th>Nombre</th>
                                     <th>Correo</th>
                                     <th>ID Rol</th>
+                                    <th>Acciones</th> <!-- Nueva columna para acciones -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -36,6 +37,10 @@ if (!$result_usuarios) {
                                         <td><?php echo htmlspecialchars($row['nombre']); ?></td>
                                         <td><?php echo htmlspecialchars($row['correo']); ?></td>
                                         <td><?php echo htmlspecialchars($row['id_rol']); ?></td>
+                                        <td>
+                                            <!-- Cambiamos el id por documento en el enlace -->
+                                            <a href="/admin/tablaUser?documento=<?php echo htmlspecialchars($row['documento']); ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">Eliminar</a>
+                                        </td>
                                     </tr>
                                 <?php endwhile; ?>
                             </tbody>

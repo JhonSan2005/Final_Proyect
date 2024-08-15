@@ -1,26 +1,10 @@
 <div class="container-xl px-4 mt-4">
     <nav class="nav nav-borders">
         <a class="nav-link active ms-0" href="/profile">Perfil</a>
-     
     </nav>
     <hr class="mt-0 mb-4">
     <div class="row">
-        <div class="col-xl-4">
-            <div class="card mb-4 mb-xl-0">
-                <div class="card-header">Foto de Perfil</div>
-                <div class="card-body text-center">
-                    <img id="profileImage" class="img-account-profile mb-2 img-thumbnail" 
-                         src="<?php echo htmlspecialchars($profile['foto_perfil'] ?: 'http://bootdey.com/img/Content/avatar/avatar1.png'); ?>" 
-                         alt="Foto de perfil">
-            
-                    <div id="previewContainer" class="mb-3" style="display: none;">
-                        <img id="previewImage" class="img-thumbnail" src="#" alt="Vista previa">
-                        <button type="button" class="btn btn-danger mt-2" onclick="cancelUpload()">Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-8">
+        <div class="col-xl-12">
             <div class="card mb-4">
                 <div class="card-header">Detalles de la cuenta</div>
                 <div class="card-body">
@@ -40,6 +24,12 @@
                             <input class="form-control" id="correo" name="correo" type="text" 
                                 placeholder="Ingresa tu correo" value="<?php echo htmlspecialchars($correo); ?>">
                         </div>
+                        <div class="mb-3">
+                            <label class="small mb-1" for="password_actual">Contraseña Actual</label>
+                            <input class="form-control" id="password_actual" name="password_actual" type="password" 
+                                placeholder="Ingresa tu contraseña actual" value="<?php echo htmlspecialchars($password); ?>">
+                        </div>
+                        
                         <button class="btn btn-primary" type="submit">Guardar Cambios</button>
                     </form>
 

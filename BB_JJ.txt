@@ -24,6 +24,7 @@ BEGIN
     END IF;
 END$$
 DELIMITER ;
+
 DELIMITER $$
 CREATE TRIGGER actualizar_estado_factura
 AFTER DELETE ON ventas
