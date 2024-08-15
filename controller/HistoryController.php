@@ -12,5 +12,12 @@ class HistoryController {
         ]);
     }
 
+    
+    public static function Terminos(Router $router) {
+        $router->render('products/Terminos', [
+            "title" => "Sobre Nosotros"
+        ]);
+    }
+
 }
 ?>

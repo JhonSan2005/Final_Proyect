@@ -15,8 +15,8 @@
                 <ul class="list-unstyled mb-0">
                     <li><a href="/history" class="text-light d-block">Sobre Nosotros</a></li>
                     <li><a href="/products" class="text-light d-block">Productos</a></li>
-                    <li><a href="/contact" class="text-light d-block">Contacto</a></li>
-                    <li><a href="/faq" class="text-light d-block">Preguntas Frecuentes</a></li>
+                    <li><a href="/Terminos" class="text-light d-block">Terminos y condiciones</a></li>
+               
                 </ul>
             </div>
 

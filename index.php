@@ -49,6 +49,7 @@ $router->get('/category', [ProductController::class, 'category']);
 $router->get('/carrito', [CarritoController::class, 'index']);
 $router->get('/devolucion', [DevolucionController::class, 'devolucion']);
 $router->get('/history', [HistoryController::class, 'history']);
+$router->get('/Terminos', [HistoryController::class, 'Terminos']);
 $router->get('/formaPago', [VentaController::class, 'index']);
 
 
@@ -77,10 +78,6 @@ $router->post('/api/venta', [VentaController::class, 'vender']);
 // Solo Administrador
 $router->get('/admin/dashboard', [DashboardController::class, 'index']);
 $router->get('/admin/tablaUser', [DashboardController::class, 'tablaUser']);
-$router->post('/admin/tablaUser', [DashboardController::class, 'eliminarUsuarioAdmin']);
-
-
-
 
 $router->get('/products/actualizarProducto', [ProductController::class, 'actualizarproducto']);
 $router->post('/products/actualizarProducto', [ProductController::class, 'actualizarproducto']);

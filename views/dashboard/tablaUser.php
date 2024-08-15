@@ -1,7 +1,7 @@
 <?php
 $conexion = Conexion::conectar();
 // Consulta para obtener todos los usuarios
-$query = "SELECT * FROM usuario";
+$query = "SELECT * FROM usuario WHERE id_rol=2";
 $result_usuarios = $conexion->query($query);
 
 if (!$result_usuarios) {
@@ -126,8 +126,8 @@ document.addEventListener('DOMContentLoaded', function () {
         paginationNav.innerHTML = '';
         for (let i = 1; i <= totalPages; i++) {
             const pageItem = document.createElement('li');
-            pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-            pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+            pageItem.className = page-item ${i === currentPage ? 'active' : ''};
+            pageItem.innerHTML = <a class="page-link" href="#">${i}</a>;
             pageItem.addEventListener('click', function (e) {
                 e.preventDefault();
                 currentPage = i;

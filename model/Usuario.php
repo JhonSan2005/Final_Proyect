@@ -39,16 +39,29 @@ class Usuario extends Conexion {
 
     public static function actualizarUsuario($documento, $nombre, $correo, $password, $id) {
         $conexion = self::conectar();
-        $consulta = $conexion->prepare("UPDATE usuario SET documento=?, nombre=?, correo=?, password=? WHERE id=?");
-        $consulta->bind_param('ssssi', $documento, $nombre, $correo, $password, $id);
+        
+        // Si la contraseña está vacía, no se actualiza
+        $query = "UPDATE usuario SET documento=?, nombre=?, correo=?";
+        if ($password !== '') {
+            $passwordEncriptada = password_hash($password, PASSWORD_BCRYPT);
+            $query .= ", password=?";
+        }
+        $query .= " WHERE id=?";
+        
+        $consulta = $conexion->prepare($query);
+        if ($password !== '') {
+            $consulta->bind_param('ssssii', $documento, $nombre, $correo, $passwordEncriptada, $id);
+        } else {
+            $consulta->bind_param('sssi', $documento, $nombre, $correo, $id);
+        }
         $resultado = $consulta->execute();
         
         return $resultado;
     }
     
-    public static function eliminarcuentauser($id) {
+    public static function eliminarcuentauser($documuento) {
         $conexion = self::conectar();
-        $consulta = $conexion->prepare("DELETE FROM usuario WHERE id = ?");
+        $consulta = $conexion->prepare("DELETE FROM usuario WHERE documento = ?");
         $consulta->bind_param('i', $id);
         $resultado = $consulta->execute();
     

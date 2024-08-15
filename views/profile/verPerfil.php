@@ -8,7 +8,7 @@
             <div class="card mb-4">
                 <div class="card-header">Detalles de la cuenta</div>
                 <div class="card-body">
-                    <form action="/profile/verPerfil" method="POST" enctype="multipart/form-data">
+                    <form action="/profile/actualizar" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label class="small mb-1" for="documento">Documento</label>
                             <input class="form-control" id="documento" name="documento" type="text" 
@@ -27,14 +27,25 @@
                         <div class="mb-3">
                             <label class="small mb-1" for="password_actual">Contraseña Actual</label>
                             <input class="form-control" id="password_actual" name="password_actual" type="password" 
-                                placeholder="Ingresa tu contraseña actual" value="<?php echo htmlspecialchars($password); ?>">
+                                placeholder="Ingresa tu contraseña actual">
+                        </div>
+                        <div class="mb-3">
+                            <label class="small mb-1" for="password_nueva">Nueva Contraseña</label>
+                            <input class="form-control" id="password_nueva" name="password_nueva" type="password" 
+                                placeholder="Ingresa tu nueva contraseña">
+                        </div>
+                        <div class="mb-3">
+                            <label class="small mb-1" for="confirmar_password">Confirmar Nueva Contraseña</label>
+                            <input class="form-control" id="confirmar_password" name="confirmar_password" type="password" 
+                                placeholder="Confirma tu nueva contraseña">
                         </div>
                         
                         <button class="btn btn-primary" type="submit">Guardar Cambios</button>
                     </form>
 
-                    <form action="/profile<?php echo htmlspecialchars($id['id']); ?>" method="POST">
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <form action="/profile" method="POST" class="mt-3">
+                        <input type="hidden" name="id" value="<?php echo htmlspecialchars($_SESSION['id']); ?>">
+                        <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
                     </form>
                 </div>
             </div>
