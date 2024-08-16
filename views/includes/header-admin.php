@@ -22,7 +22,7 @@
           </li>
           
           <li class="nav-item">
-            <a class="nav-link link-light fw-medium" href="/admin/tablaUser">Tabla</a>
+            <a class="nav-link link-light fw-medium" href="/admin/tablaUser">Usuarios Registrados</a>
           </li>
 
           <li class="nav-item">

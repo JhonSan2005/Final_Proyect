@@ -15,7 +15,6 @@ if (!$result_usuarios) {
             <div class="card shadow border-danger rounded">
                 <div class="card-body">
                     <h2 class="card-title mb-4 text-danger">Usuarios Registrados</h2>
-                    <input type="text" id="searchInput" class="form-control mb-3" placeholder="Buscar..." aria-label="Buscar usuarios">
                     <div id="noResults" class="alert alert-danger d-none" role="alert">No se encontraron resultados.</div>
                     <div class="table-responsive">
                         <table id="userTable" class="table table-hover table-striped table-bordered">
@@ -83,10 +82,6 @@ if (!$result_usuarios) {
     .table tbody td {
         vertical-align: middle;
     }
-    .form-control {
-        border-radius: 20px;
-        box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
-    }
     .pagination {
         margin: 0;
     }
@@ -98,7 +93,6 @@ if (!$result_usuarios) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('searchInput');
     const userTable = document.getElementById('userTable');
     const rows = userTable.querySelectorAll('tbody tr');
     const noResults = document.getElementById('noResults');
@@ -132,27 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         noResults.classList.toggle('d-none', rows.length > 0);
     }
-
-    searchInput.addEventListener('keyup', function () {
-        const filter = searchInput.value.toLowerCase();
-        let matchCount = 0;
-        rows.forEach(row => {
-            const cells = row.getElementsByTagName('td');
-            let match = false;
-            for (let i = 0; i < cells.length; i++) {
-                if (cells[i].textContent.toLowerCase().includes(filter)) {
-                    match = true;
-                    break;
-                }
-            }
-            row.style.display = match ? '' : 'none';
-            if (match) matchCount++;
-        });
-        noResults.classList.toggle('d-none', matchCount > 0);
-        totalPages = Math.ceil(matchCount / rowsPerPage);
-        currentPage = 1;
-        paginate();
-    });
 
     paginate();
 });

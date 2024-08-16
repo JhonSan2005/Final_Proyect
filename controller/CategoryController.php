@@ -90,7 +90,7 @@ class CategoryController {
         $categorias = Category::verCategorias();
     
         // Renderizar la vista de administración de categorías
-        $router->render("categories/verCategorias", [
+        $router->render("cadmin/verCategorias", [
             "title" => "Administrar Categorías",
             "categorias" => $categorias,
             "error" => $resultado === false ? "Error al eliminar la categoría" : null

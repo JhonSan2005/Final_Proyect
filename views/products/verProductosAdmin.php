@@ -34,7 +34,7 @@
                             <td><?php echo $producto['descripcion']; ?></td>
                             <td><img class="img-thumbnail" style="width: 100px; height: 100px;" src="<?php echo $producto['imagen_url']; ?>" alt="Imagen Producto"></td>
                             <td>
-                                <form action="/products/actualizarProducto?id=<?php echo $producto['id_producto']; ?>" method="POST">
+                                <form action="/admin/actualizarProducto?id=<?php echo $producto['id_producto']; ?>" method="POST">
                                     <button type="submit" class="btn btn-warning">Editar</button>
                                 </form>
 

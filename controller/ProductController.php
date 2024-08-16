@@ -161,7 +161,7 @@ class ProductController
             // Verificar si la categoría existe
             if (!Category::categoriaExiste($id_categoria)) {
                 $router->render('products/actualizarProducto', [
-                    'title' => 'Categoría no encontrada',
+                    'title' => '',
                     'resultado' => 'Error: La categoría especificada no existe.',
                     'producto' => Product::encontrarProducto($id_producto),
                     'categorias' => Category::verCategorias() // Pasar las categorías al formulario
@@ -186,7 +186,7 @@ class ProductController
         }
     
         if (!is_array($producto)) {
-            $router->render('products/actualizarProducto', [
+            $router->render('admin/actualizarProducto', [
                 'title' => 'Producto no encontrado',
                 'resultado' => 'Error: El producto no fue encontrado.',
                 'categorias' => Category::verCategorias() // Pasar las categorías al formulario

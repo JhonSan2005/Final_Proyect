@@ -26,7 +26,7 @@
             <div class="card mb-4">
                 <div class="card-header">Detalles del Producto</div>
                 <div class="card-body">
-                    <form action="/products/actualizarProducto?id=<?php echo htmlspecialchars($producto['id_producto']); ?>" method="POST" enctype="multipart/form-data">
+                    <form action="/admin/actualizarProducto?id=<?php echo htmlspecialchars($producto['id_producto']); ?>" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="id_producto" value="<?php echo htmlspecialchars($producto['id_producto'] ?? ''); ?>">
 
                         <div class="mb-3">
