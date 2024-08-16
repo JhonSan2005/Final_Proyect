@@ -105,6 +105,8 @@ $router->get('/procesarDevolucion', [DevolucionController::class, 'procesarDevol
 $router->get('/admin/adminPerfil', [ProfileController::class, 'actualizarAdmin']);
 $router->post('/admin/adminPerfil', [ProfileController::class, 'actualizarAdmin']);
 
+
+
 // Verificar y ejecutar la ruta actual
 $router->verifyRoutes();
 ?>
