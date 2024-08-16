@@ -41,7 +41,7 @@
             Opciones
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/admin/profile">Perfil</a></li>
+            <li><a class="dropdown-item" href="/admin/adminPerfil">Perfil</a></li>
       
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="/close-session">Cerrar Sesion</a></li>

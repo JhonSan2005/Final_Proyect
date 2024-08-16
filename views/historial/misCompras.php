@@ -4,6 +4,11 @@
     <?php if (empty($compras)): ?>
         <p>No has realizado ninguna compra aún.</p>
     <?php else: ?>
+        <div class="d-flex justify-content-end mb-3">
+            <input type="date" id="fechaInicio" class="form-control me-2">
+            <input type="date" id="fechaFin" class="form-control me-2">
+            <button id="ordenarFechas" class="btn btn-primary">Ordenar por Fecha</button>
+        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -15,7 +20,7 @@
                     <th>Estado</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tablaCompras">
                 <?php foreach ($compras as $idFactura => $compra): ?>
                     <tr onclick="mostrarDetalles(<?= $idFactura ?>)">
                         <td><?= $idFactura ?></td>
@@ -23,7 +28,7 @@
                         <td><?= isset($compra['descripcion']) ? $compra['descripcion'] : 'N/A' ?></td>
                         <td><?= $compra['impuesto'] ?>%</td>
                         <td><?= $compra['direccion_facturacion'] ?></td>
-                        <td><?= isset($compra['estado']) ? $compra['estado'] : 'N/A' ?></td>
+                        <td>Aprobado</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -55,12 +60,17 @@ function mostrarDetalles(idFactura) {
     const compra = compras[idFactura];
     
     let detallesHtml = '';
+    let totalGeneral = 0;
+    
     if (compra && compra.productos.length > 0) {
         detallesHtml += '<ul>';
         compra.productos.forEach(producto => {
-            detallesHtml += `<li>${producto.nombre_producto} - ${producto.cantidad} unidades - $${producto.precio}</li>`;
+            const totalProducto = producto.cantidad * producto.precio;
+            totalGeneral += totalProducto;
+            detallesHtml += `<li>${producto.nombre_producto} - ${producto.cantidad} unidades - $${producto.precio} cada uno - Total: $${totalProducto.toFixed(2)}</li>`;
         });
         detallesHtml += '</ul>';
+        detallesHtml += `<p><strong>Total General: $${totalGeneral.toFixed(2)}</strong></p>`;
     } else {
         detallesHtml = "No se encontraron detalles.";
     }
@@ -70,4 +80,30 @@ function mostrarDetalles(idFactura) {
     var myModal = new bootstrap.Modal(document.getElementById('detallesModal'));
     myModal.show();
 }
+
+document.getElementById('ordenarFechas').addEventListener('click', function() {
+    const tabla = document.getElementById('tablaCompras');
+    const fechaInicio = new Date(document.getElementById('fechaInicio').value);
+    const fechaFin = new Date(document.getElementById('fechaFin').value);
+
+    if (isNaN(fechaInicio) || isNaN(fechaFin)) {
+        alert('Por favor, selecciona ambas fechas.');
+        return;
+    }
+
+    let filas = Array.from(tabla.querySelectorAll('tr'));
+    let filasFiltradas = filas.filter(fila => {
+        const fecha = new Date(fila.cells[1].innerText);
+        return fecha >= fechaInicio && fecha <= fechaFin;
+    });
+
+    // Limpiar la tabla antes de mostrar las filas filtradas
+    tabla.innerHTML = '';
+    
+    if (filasFiltradas.length === 0) {
+        tabla.innerHTML = '<tr><td colspan="6">No hay compras en el rango de fechas seleccionado.</td></tr>';
+    } else {
+        filasFiltradas.forEach(fila => tabla.appendChild(fila));
+    }
+});
 </script>

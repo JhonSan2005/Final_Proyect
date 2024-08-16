@@ -88,7 +88,7 @@ $router->post('/admin/products', [ProductController::class, 'eliminarproductoadm
 $router->get('/admin/agregarProductos', [ProductController::class, 'agregar']); 
 $router->post('/admin/agregarProductos', [ProductController::class, 'agregar']); 
 $router->get('/admin/orders', [DashboardController::class, 'index']);
-$router->get('/admin/profile', [ProfileController::class, 'index']);
+
 $router->get('/admin/categories', [CategoryController::class, 'verCategorias']);
 $router->post('/admin/categories', [CategoryController::class, 'eliminarCategoriaAdmin']); 
 $router->get('/admin/agregarCategoria', [CategoryController::class, 'agregarCategoria']);
@@ -102,6 +102,8 @@ $router->get('/profile/devolucion', [DevolucionController::class, 'devolucion'])
 $router->post('/procesarDevolucion', [DevolucionController::class, 'procesarDevolucion']);
 $router->get('/procesarDevolucion', [DevolucionController::class, 'procesarDevolucion']);
 
+$router->get('/admin/adminPerfil', [ProfileController::class, 'actualizarAdmin']);
+$router->post('/admin/adminPerfil', [ProfileController::class, 'actualizarAdmin']);
 
 // Verificar y ejecutar la ruta actual
 $router->verifyRoutes();

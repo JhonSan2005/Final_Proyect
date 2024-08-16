@@ -8,6 +8,8 @@ require_once __DIR__ . "/../model/VentasFactura.php";
 
 class VentaController {
 
+    
+
     public static function index(Router $router) {
         $router->render('payments/formaPago', [
             "title" => "Forma de Pago"
@@ -15,93 +17,118 @@ class VentaController {
     }
 
     public static function vender() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nombre = filter_var($_POST['nombre'] ?? '', FILTER_SANITIZE_STRING);
-            $apellido = filter_var($_POST['apellido'] ?? '', FILTER_SANITIZE_STRING);
+
+        if( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
+
+            // Variables por si se necesitan en un futuro
+            $nombre = filter_var($_POST['nombre'] ?? '');
+            $apellido = filter_var($_POST['apellido'] ?? '');
             $correo = filter_var($_POST['correo'] ?? '', FILTER_SANITIZE_EMAIL);
-            $direccion = filter_var($_POST['direccion'] ?? '', FILTER_SANITIZE_STRING);
-            $pais = filter_var($_POST['pais'] ?? '', FILTER_SANITIZE_STRING);
-            $departamento = filter_var($_POST['departamento'] ?? '', FILTER_SANITIZE_STRING);
-            $municipio = filter_var($_POST['municipio'] ?? '', FILTER_SANITIZE_STRING);
-            $listaProductos = json_decode(filter_var($_POST['lista_productos'] ?? '', FILTER_SANITIZE_STRING), true);
+            $direccion = filter_var($_POST['direccion'] ?? '');
+            $pais = filter_var($_POST['pais'] ?? '');
+            $departamento = filter_var($_POST['departamento'] ?? '');
+            $municipio = filter_var($_POST['municipio'] ?? '');
+            $listaProductos = filter_var($_POST['lista_productos'] ?? []);
 
             // Validaciones
-            if (!$correo) {
+            if( !$correo ) {
                 http_response_code(400);
-                echo json_encode(["msg" => "El correo no puede ir vacío", "type" => "danger"]);
+                echo json_encode([ "msg" => "El correo no puede ir vacio", "type" =>  "danger" ]);
                 return;
             }
 
-            if (empty($listaProductos) || !$direccion || !$pais || !$departamento || !$municipio) {
+            if( !$listaProductos || !$direccion || !$pais || !$departamento || !$municipio ) {
                 http_response_code(400);
-                echo json_encode(["msg" => "No se pudo generar la compra, vuelve a intentarlo", "type" => "danger"]);
+                echo json_encode([ "msg" => "No se pudo generar la compra, vuelve a intentarlo", "type" =>  "danger" ]);
                 return;
             }
 
-            // Verificar existencia del usuario
+            // Si pasamos las validaciones procedemos a hacer las respectivas consultas para ejecutar la compra
             $existeUsuario = Usuario::encontrarUsuario('correo', $correo);
-            if (!$existeUsuario) {
+
+            if( !$existeUsuario ) {
                 http_response_code(400);
                 echo json_encode(["msg" => "Error con el usuario, por favor ingrese el correo de su cuenta", "type" => "danger"]);
                 return;
             }
 
-            // Procesar factura
-            $hoy = date("Y-m-d H:i:s");
-            $direccionCompleta = "$direccion - $municipio, $departamento, $pais";
+            // En caso de que exista el usuario, hacer el proceso para facturarle al usuario
+            // Para poder facturar debemos pasar la fecha actual
+            $hoy = date("Y-m-d H:i:s");                   // 2001-03-10 17:16:18 (el formato DATETIME de MySQL)
+            $direccionCompleta = "$direccion - $municipio, $departamento, $pais"; // Organizamos la direccion de tal manera que se lea mejor
             $generarFactura = Factura::guardar('Factura de Venta', $existeUsuario['id'], $hoy, $direccionCompleta, 19);
 
-            if ($generarFactura) {
+            // Si se genera bien la factura, procedemos a hacer un bucle para registrar cada uno de los productos en la BD
+            // PD: en la variable $generarFactura viene el id de la factura, porque eso devuelve la funcion
+            if( $generarFactura ) {
+
+                // Como la lista de productos viene codificada en string toca decodificarla con el json_decode para que deje usarla en PHP
+                $listaProductos = json_decode($listaProductos);
+
                 $productosEnCarrito = [];
 
-                foreach ($listaProductos as $producto) {
-                    // Validar que el id de cada producto exista
-                    $existeProducto = Product::buscarProducto('id_producto', $producto['id']);
-                    if (!$existeProducto) {
+                foreach( $listaProductos as $producto ) {
+                    // Validamos que el id de cada producto exista, en caso de no existir alguno se procedera a dar error
+                    $existeProducto = Product::buscarProducto('id_producto', $producto->id)[0];
+
+                    // Si no existe el producto damos error
+                    if( !$existeProducto ) {
                         http_response_code(400);
-                        echo json_encode(["msg" => "Ha ocurrido un error, vuelve a intentarlo más tarde", "type" => "danger"]);
+                        echo json_encode([ "msg" => "Ha ocurrido un error, vuelve a intentarlo mas tarde", "type" => "danger" ]);
+                        return;
+                    }
+                    
+                    // Si existe el producto, procedemos a meterlo a un array donde posteriormente se guardara en la base de datos
+                    // Tambien en el mismo array debemos guardar la cantidad a seleccionar y revisar que no sea mayor a la cantidad en stock
+                    if( intval($existeProducto["stock"]) < intval($producto->cantidad) ) {
+                        http_response_code(400);
+                        echo json_encode([ "msg" => "Ha ocurrido un error, parece que las cantidades seleccionadas no estan disponibles", "type" => "danger" ]);
                         return;
                     }
 
-                    // Validar stock
-                    if (intval($existeProducto["stock"]) < intval($producto['cantidad'])) {
-                        http_response_code(400);
-                        echo json_encode(["msg" => "Ha ocurrido un error, parece que las cantidades seleccionadas no están disponibles", "type" => "danger"]);
-                        return;
-                    }
-
-                    $existeProducto["cantidad_escogida"] = $producto['cantidad'];
+                    // Procedemos a crear una nueva posicion del array asociativo llamada cantidad escodiga y guardamos alli las cantidades
+                    //  que el usuario desea comprar
+                    $existeProducto["cantidad_escogida"] = $producto->cantidad;
                     $productosEnCarrito[] = $existeProducto;
+                    
                 }
 
-                // Insertar los productos en la tabla de ventas
-                foreach ($productosEnCarrito as $productoAFacturar) {
+                // Con todo lo anterior presente ya podemos hacer la respectiva insercion de los productos en la tabla de ventas
+                // Para ello debemos hacer otro ciclo para ahora si insertar los datos
+                foreach( $productosEnCarrito as $productoAFacturar ) {
                     $generarVenta = Ventas::guardar($generarFactura, $productoAFacturar['id_producto'], $productoAFacturar['cantidad_escogida']);
-                    if (!$generarVenta) {
+                    if( !$generarVenta ) {
                         Factura::eliminar($generarFactura);
                         http_response_code(400);
                         echo json_encode(["msg" => "Ha ocurrido un error al emitir la factura", "type" => "danger"]);
                         return;
                     }
 
-                    // Actualizar stock
+                    // Hacemos las restas pertinentes y procedemos a restar las cantidades
                     $cantidad_restante = intval($productoAFacturar['stock']) - intval($productoAFacturar['cantidad_escogida']);
                     Product::actualizarProductoPorColumna('stock', $cantidad_restante, $productoAFacturar['id_producto']);
                 }
-
-                // Mostrar factura generada
+                
+                // Si todo sale bien podemos mostrar los datos
                 $facturaGenerada = VentasFactura::verDetallesFactura($generarFactura);
-                if ($facturaGenerada) {
+                if( $facturaGenerada ) {
                     http_response_code(200);
-                    echo json_encode(["msg" => "Factura de Venta Generada Correctamente", "type" => "success", "data" => $facturaGenerada]);
+                    echo json_encode([ "msg" => "Factura de Venta Generada Correctamente", "type" => "success", "data" => $facturaGenerada ]);
                     return;
                 } else {
                     http_response_code(400);
-                    echo json_encode(["msg" => "Error al mostrar la factura generada, por favor póngase en contacto con el administrador", "type" => "danger"]);
+                    echo json_encode([ "msg" => "Error al mostrar la factura generada, por favor pongase en contacto con el administrador", "type" => "danger" ]);
                     return;
                 }
+
             }
+
+
+
+
         }
+
     }
+
 }
 ?>
