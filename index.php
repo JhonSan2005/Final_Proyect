@@ -93,8 +93,9 @@ $router->get('/admin/categories', [CategoryController::class, 'verCategorias']);
 $router->post('/admin/categories', [CategoryController::class, 'eliminarCategoriaAdmin']); 
 $router->get('/admin/agregarCategoria', [CategoryController::class, 'agregarCategoria']);
 $router->post('/admin/agregarCategoria', [CategoryController::class, 'agregarCategoria']); 
-$router->get('/categories/actualizarCategoria', [CategoryController::class, 'actualizarcategoria']);
-$router->post('/categories/actualizarCategoria', [CategoryController::class, 'actualizarcategoria']);
+$router->get('/admin/actualizarCategoria', [CategoryController::class, 'actualizarcategoria']);
+$router->post('/admin/actualizarCategoria', [CategoryController::class, 'actualizarcategoria']);
+
 
 $router->get('/misCompras', [HistoryController::class, 'verCompras']);
 

@@ -30,8 +30,8 @@ class CategoryController {
         $alertas = new Alerta;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id_categoria = filter_input(INPUT_POST, 'id_categoria', FILTER_SANITIZE_STRING) ?? '';
-            $nombre_categoria = filter_input(INPUT_POST, 'nombre_categoria', FILTER_SANITIZE_STRING) ?? '';
+            $id_categoria = filter_input(INPUT_POST, 'id_categoria', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
+            $nombre_categoria = filter_input(INPUT_POST, 'nombre_categoria', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
 
             $alertas->crearAlerta(empty($id_categoria), 'danger', 'El ID no puede ir vacío');
             $alertas->crearAlerta(empty($nombre_categoria), 'danger', 'El nombre no puede ir vacío');
@@ -90,7 +90,7 @@ class CategoryController {
         $categorias = Category::verCategorias();
     
         // Renderizar la vista de administración de categorías
-        $router->render("cadmin/verCategorias", [
+        $router->render("categories/verCategorias", [
             "title" => "Administrar Categorías",
             "categorias" => $categorias,
             "error" => $resultado === false ? "Error al eliminar la categoría" : null
@@ -106,9 +106,10 @@ class CategoryController {
         $id_categoria = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?? '';
         $alertas = new Alerta;
         $resultado = '';
-    
+        
+        // Si el método de solicitud es POST, se actualiza la categoría
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nombre_categoria = filter_input(INPUT_POST, 'nombre_categoria', FILTER_SANITIZE_STRING) ?? '';
+            $nombre_categoria = filter_input(INPUT_POST, 'nombre_categoria', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
     
             // Verificar si la categoría existe
             if (!Category::categoriaExiste($id_categoria)) {
@@ -123,6 +124,7 @@ class CategoryController {
             $resultado = Category::actualizarCategoria($id_categoria, $nombre_categoria);
             $categoria = Category::encontrarCategoria($id_categoria);
         } else {
+            // Cargar la categoría para mostrarla en el formulario
             $categoria = Category::encontrarCategoria($id_categoria);
         }
     
@@ -142,5 +144,6 @@ class CategoryController {
             'categorias' => Category::verCategorias() // Pasar las categorías al formulario
         ]);
     }
+    
 }
 ?>

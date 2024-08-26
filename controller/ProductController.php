@@ -145,13 +145,13 @@ class ProductController
         $resultado = '';
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nombre_producto = filter_input(INPUT_POST, 'nombre_producto', FILTER_SANITIZE_STRING);
-            $precio = filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_STRING);
-            $impuesto = filter_input(INPUT_POST, 'impuesto', FILTER_SANITIZE_STRING);
-            $stock = filter_input(INPUT_POST, 'stock', FILTER_SANITIZE_STRING);
+            $nombre_producto = filter_input(INPUT_POST, 'nombre_producto', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $precio = filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $impuesto = filter_input(INPUT_POST, 'impuesto', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $stock = filter_input(INPUT_POST, 'stock', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $id_categoria = filter_input(INPUT_POST, 'id_categoria', FILTER_SANITIZE_NUMBER_INT) ?? 0;
-            $descripcion = filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_STRING);
-            $imagen_url = filter_input(INPUT_POST, 'imagen_url', FILTER_SANITIZE_STRING) ?? '';
+            $descripcion = filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $imagen_url = filter_input(INPUT_POST, 'imagen_url', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
     
             if (isset($_FILES['imagen_producto']) && $_FILES['imagen_producto']['error'] === UPLOAD_ERR_OK) {
                 $imagen_url = 'ruta/a/la/imagen/' . basename($_FILES['imagen_producto']['name']);
@@ -161,7 +161,7 @@ class ProductController
             // Verificar si la categoría existe
             if (!Category::categoriaExiste($id_categoria)) {
                 $router->render('products/actualizarProducto', [
-                    'title' => '',
+                    'title' => 'Categoría no encontrada',
                     'resultado' => 'Error: La categoría especificada no existe.',
                     'producto' => Product::encontrarProducto($id_producto),
                     'categorias' => Category::verCategorias() // Pasar las categorías al formulario

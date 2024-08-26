@@ -39,15 +39,15 @@ class RecoverController {
     public static function actualizarPassword(Router $router) {
         $alertas = new Alerta;
 
-        $token = filter_var($_GET['token'] ?? '', FILTER_SANITIZE_STRING);
+        $token = filter_var($_GET['token'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $alertas->crearAlerta(empty($token), 'danger', 'Token no válido');
 
         $existeUser = Usuario::encontrarUsuarioPorToken($token);
         $alertas->crearAlerta(!$existeUser, 'danger', 'Token no válido');
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $password = filter_var($_POST['nueva_password'] ?? '', FILTER_SANITIZE_STRING);
-            $password_confirm = filter_var($_POST['confirmar_password'] ?? '', FILTER_SANITIZE_STRING);
+            $password = filter_var($_POST['nueva_password'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $password_confirm = filter_var($_POST['confirmar_password'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
             $alertas->crearAlerta(empty($password), 'danger', 'El password no puede ir vacío');
             $alertas->crearAlerta(strlen($password) < 8, 'danger', 'El password no puede ser menos de 8 caracteres');
