@@ -4,8 +4,14 @@ require_once __DIR__ . "/../../helpers/functions.php";
 
 ?>
 
+
 <div class="container">
     <a class="btn btn-success mt-5 mb-3" href="/admin/agregarCategoria">Agregar Categoría</a>
+    <?php if (isset($error)): ?>
+        <div class="alert alert-danger" role="alert">
+            <?php echo htmlspecialchars($error); ?>
+        </div>
+    <?php endif; ?>
 
     <div class="table-responsive">
         <table class="table">
@@ -63,6 +69,9 @@ require_once __DIR__ . "/../../helpers/functions.php";
         </table>
     </div>
 </div>
+
+
+
 
 
 

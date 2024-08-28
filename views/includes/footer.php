@@ -13,10 +13,11 @@
             <div class="col-md-4 mb-3 mb-md-0 text-center text-md-start">
                 <h5 class="text-uppercase mb-3">Enlaces Rápidos</h5>
                 <ul class="list-unstyled mb-0">
-                    <li><a href="/histor" class="text-light d-block">Sobre Nosotros</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=x4fSOEsy0d0" class="text-light d-block">Sobre Nosotros</a></li>
                     <li><a href="/products" class="text-light d-block">Productos</a></li>
-                    <li><a href="/contact" class="text-light d-block">Contacto</a></li>
-                    <li><a href="/faq" class="text-light d-block">Preguntas Frecuentes</a></li>
+                    <li><a href="mailto:support@dominio.com" class="text-light d-block">Contacto</a></li>
+
+
                 </ul>
             </div>
 

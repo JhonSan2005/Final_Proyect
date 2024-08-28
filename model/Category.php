@@ -65,6 +65,19 @@ class Category extends Conexion {
         $consulta = $conexion->query("SELECT * FROM categorias");
         return $consulta->fetch_all(MYSQLI_ASSOC);
     }
+    public static function tieneProductos($id_categoria) {
+        $conexion = self::conectar();
+        $query = "SELECT COUNT(*) FROM productos WHERE id_categoria = ?";
+        $stmt = $conexion->prepare($query);
+        $stmt->bind_param('i', $id_categoria);
+        $stmt->execute();
+        $stmt->bind_result($count);
+        $stmt->fetch();
+        $stmt->close();
+        return $count > 0;
+    }
+    
+    
 
 }
 

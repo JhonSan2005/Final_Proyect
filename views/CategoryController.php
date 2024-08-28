@@ -72,6 +72,7 @@ class CategoryController {
             "categorias" => $categorias
         ]);
     }
+
     public static function eliminarCategoriaAdmin(Router $router) {
         if (!isAuth()) {
             return header("Location: /404");
@@ -80,34 +81,22 @@ class CategoryController {
         $id_categoria = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?? null;
     
         if ($id_categoria === null) {
-            return header("Location: /404");
+            return header("Location: /404"); // Redirige si no se proporciona un ID
         }
     
-        $tieneProductos = Category::tieneProductos($id_categoria);
+        $resultado = Category::eliminarCategoriaAdmin($id_categoria);
     
-        if ($tieneProductos) {
-            $error = "La categoría no se puede eliminar porque tiene productos asociados.";
-        } else {
-            $resultado = Category::eliminarCategoriaAdmin($id_categoria);
-    
-            if ($resultado === false) {
-                $error = "Error al eliminar la categoría.";
-            } else {
-                $error = null; // La eliminación fue exitosa
-            }
-        }
-    
+        // Obtener la lista actualizada de categorías
         $categorias = Category::verCategorias();
     
+        // Renderizar la vista de administración de categorías
         $router->render("categories/verCategorias", [
             "title" => "Administrar Categorías",
             "categorias" => $categorias,
-            "error" => $error
+            "error" => $resultado === false ? "Error al eliminar la categoría" : null
         ]);
     }
-    
-    
-    
+
     public static function actualizarCategoria(Router $router) {
         if (!isAuth()) {
             header("Location: /");
@@ -115,8 +104,9 @@ class CategoryController {
         }
     
         $id_categoria = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?? '';
+        $alertas = new Alerta;
         $resultado = '';
-    
+        
         // Si el método de solicitud es POST, se actualiza la categoría
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre_categoria = filter_input(INPUT_POST, 'nombre_categoria', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
@@ -131,34 +121,29 @@ class CategoryController {
                 return;
             }
     
-            // Actualizar la categoría y redirigir
             $resultado = Category::actualizarCategoria($id_categoria, $nombre_categoria);
-            header('Location: /admin/categories'); // Redirigir a la página de administración después de actualizar
-            exit;
+            $categoria = Category::encontrarCategoria($id_categoria);
         } else {
             // Cargar la categoría para mostrarla en el formulario
             $categoria = Category::encontrarCategoria($id_categoria);
+        }
     
-            if (!is_array($categoria)) {
-                $router->render('categories/actualizarCategoria', [
-                    'title' => 'Categoría no encontrada',
-                    'resultado' => 'Error: La categoría no fue encontrada.',
-                    'categorias' => Category::verCategorias() // Pasar las categorías al formulario
-                ]);
-                return;
-            }
-    
+        if (!is_array($categoria)) {
             $router->render('categories/actualizarCategoria', [
-                'title' => 'Actualizar Categoría',
-                'resultado' => $resultado,
-                'categoria' => $categoria,
+                'title' => 'Categoría no encontrada',
+                'resultado' => 'Error: La categoría no fue encontrada.',
                 'categorias' => Category::verCategorias() // Pasar las categorías al formulario
             ]);
+            return;
         }
+    
+        $router->render('categories/actualizarCategoria', [
+            'title' => 'Actualizar Categoría',
+            'resultado' => $resultado,
+            'categoria' => $categoria,
+            'categorias' => Category::verCategorias() // Pasar las categorías al formulario
+        ]);
     }
-    
-
-    
     
 }
 ?>
