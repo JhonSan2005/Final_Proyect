@@ -39,7 +39,7 @@
                         <div class="form-check">
                             <input type="checkbox" name="termsAndConditions" class="form-check-input" id="formCheck" required>
                             <label for="formCheck" class="form-check-label text-secondary custom-label">
-                                <small><a href="/terminos-y-condiciones">Acepto los Términos y Condiciones</a></small>
+                                <small><a href="terminos/terminosCondiciones">Acepto los Términos y Condiciones</a></small>
                             </label>
                         </div>
                     </div>

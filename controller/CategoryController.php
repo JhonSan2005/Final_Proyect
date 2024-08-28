@@ -96,7 +96,6 @@ class CategoryController {
             "error" => $resultado === false ? "Error al eliminar la categoría" : null
         ]);
     }
-
     public static function actualizarCategoria(Router $router) {
         if (!isAuth()) {
             header("Location: /");
@@ -104,9 +103,8 @@ class CategoryController {
         }
     
         $id_categoria = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?? '';
-        $alertas = new Alerta;
         $resultado = '';
-        
+    
         // Si el método de solicitud es POST, se actualiza la categoría
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre_categoria = filter_input(INPUT_POST, 'nombre_categoria', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
@@ -121,29 +119,34 @@ class CategoryController {
                 return;
             }
     
+            // Actualizar la categoría y redirigir
             $resultado = Category::actualizarCategoria($id_categoria, $nombre_categoria);
-            $categoria = Category::encontrarCategoria($id_categoria);
+            header('Location: /admin/categories'); // Redirigir a la página de administración después de actualizar
+            exit;
         } else {
             // Cargar la categoría para mostrarla en el formulario
             $categoria = Category::encontrarCategoria($id_categoria);
-        }
     
-        if (!is_array($categoria)) {
+            if (!is_array($categoria)) {
+                $router->render('categories/actualizarCategoria', [
+                    'title' => 'Categoría no encontrada',
+                    'resultado' => 'Error: La categoría no fue encontrada.',
+                    'categorias' => Category::verCategorias() // Pasar las categorías al formulario
+                ]);
+                return;
+            }
+    
             $router->render('categories/actualizarCategoria', [
-                'title' => 'Categoría no encontrada',
-                'resultado' => 'Error: La categoría no fue encontrada.',
+                'title' => 'Actualizar Categoría',
+                'resultado' => $resultado,
+                'categoria' => $categoria,
                 'categorias' => Category::verCategorias() // Pasar las categorías al formulario
             ]);
-            return;
         }
-    
-        $router->render('categories/actualizarCategoria', [
-            'title' => 'Actualizar Categoría',
-            'resultado' => $resultado,
-            'categoria' => $categoria,
-            'categorias' => Category::verCategorias() // Pasar las categorías al formulario
-        ]);
     }
+    
+
+    
     
 }
 ?>

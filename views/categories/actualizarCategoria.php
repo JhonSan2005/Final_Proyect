@@ -1,43 +1,18 @@
-<!-- Detalles de la Categoría -->
-<div class="col-xl-8">
-    <div class="card mb-4">
-        <div class="card-header">Detalles de la Categoría</div>
-        <div class="card-body">
-            <form action="/admin/actualizarCategoria?id=<?php echo htmlspecialchars($categoria['id_categoria']); ?>" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="id_categoria" value="<?php echo htmlspecialchars($categoria['id_categoria'] ?? ''); ?>">
+<!-- Suponiendo que la variable $categoria contiene la categoría a editar -->
+<div class="container">
+    <h1 class="mt-5"><?php echo htmlspecialchars($title); ?></h1>
 
-                <div class="mb-3">
-                    <label class="small mb-1" for="nombre_categoria">Nombre de la Categoría</label>
-                    <input class="form-control" id="nombre_categoria" name="nombre_categoria" type="text" 
-                        value="<?php echo htmlspecialchars($categoria['nombre_categoria'] ?? ''); ?>">
-                </div>
-
-                <button class="btn btn-primary" type="submit">Guardar Cambios</button>
-                <!-- Botón para abrir el modal de eliminación -->
-                <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal<?php echo htmlspecialchars($categoria['id_categoria']); ?>">Eliminar Categoría</button>
-            </form>
-
-            <!-- Modal -->
-            <div class="modal fade" id="deleteModal<?php echo htmlspecialchars($categoria['id_categoria']); ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel<?php echo htmlspecialchars($categoria['id_categoria']); ?>" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel<?php echo htmlspecialchars($categoria['id_categoria']); ?>">Confirmar Eliminación</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            ¿Estás seguro de que deseas eliminar esta categoría?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <form action="/admin/eliminarCategoria?id=<?php echo htmlspecialchars($categoria['id_categoria']); ?>" method="POST">
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+    <?php if ($resultado): ?>
+        <div class="alert alert-info">
+            <?php echo htmlspecialchars($resultado); ?>
         </div>
-    </div>
+    <?php endif; ?>
+
+    <form action="/admin/actualizarCategoria?id=<?php echo htmlspecialchars($categoria['id_categoria']); ?>" method="POST">
+        <div class="mb-3">
+            <label for="nombre_categoria" class="form-label">Nombre de la Categoría</label>
+            <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria" value="<?php echo htmlspecialchars($categoria['nombre_categoria']); ?>" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Actualizar Categoría</button>
+    </form>
 </div>

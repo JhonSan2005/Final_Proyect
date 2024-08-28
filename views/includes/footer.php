@@ -23,8 +23,8 @@
             <!-- Información de contacto y redes sociales -->
             <div class="col-md-4 text-center text-md-end">
                 <h5 class="text-uppercase mb-3">Contacto</h5>
-                <p>Email: contacto@repuestosjj.com</p>
-                <p>Teléfono: +123 456 7890</p>
+                <p>Email: support@repuestosjj.com</p>
+                <p>Teléfono: +322 929 7058</p>
                 <div class="social-icons">
                     <a href="https://facebook.com" target="_blank" class="text-light me-3" aria-label="Facebook">
                         <i class="fab fa-facebook-f fa-2x"></i>

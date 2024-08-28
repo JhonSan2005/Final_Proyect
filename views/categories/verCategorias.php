@@ -23,7 +23,8 @@ require_once __DIR__ . "/../../helpers/functions.php";
                             <th><?php echo htmlspecialchars($category['id_categoria']); ?></th>
                             <td><?php echo htmlspecialchars($category['nombre_categoria']); ?></td>
                             <td>
-                                <form action="/admin/actualizarCategoria?id=<?php echo htmlspecialchars($category['id_categoria']); ?>" method="POST">
+                            <form action="/admin/actualizarCategoria" method="GET" style="display:inline;">
+                                    <input type="hidden" name="id" value="<?php echo htmlspecialchars($category['id_categoria']); ?>">
                                     <button type="submit" class="btn btn-warning">Editar</button>
                                 </form>
                                
@@ -62,3 +63,11 @@ require_once __DIR__ . "/../../helpers/functions.php";
         </table>
     </div>
 </div>
+
+
+
+
+
+
+
+

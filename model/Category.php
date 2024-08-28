@@ -65,7 +65,7 @@ class Category extends Conexion {
         $consulta = $conexion->query("SELECT * FROM categorias");
         return $consulta->fetch_all(MYSQLI_ASSOC);
     }
-    
+
 }
 
 

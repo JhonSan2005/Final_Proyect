@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../Router.php";
 require_once __DIR__ . "/../model/Product.php";
 require_once __DIR__ . "/../model/Category.php";
+require_once __DIR__ . "/../model/Usuario.php";
 require_once __DIR__ . "/../helpers/functions.php";
 
 class ProductController
@@ -201,5 +202,69 @@ class ProductController
             'categorias' => Category::verCategorias() // Pasar las categorías al formulario
         ]);
     }
+    // Función para obtener el ID del usuario autenticado
+    private function getAuthenticatedUserId()
+    {
+        // Asegúrate de iniciar la sesión si no está ya iniciada
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Verificar si el ID del usuario está en la sesión con la clave 'id'
+        return $_SESSION['id'] ?? null;
+    }
+
+    public static function eliminarcuenta(Router $router)
+    {
+        // Verificar si el usuario está autenticado
+        if (!self::isAuth()) {
+            header("Location: /404");
+            exit; // Asegúrate de salir después de la redirección
+        }
+    
+        // Obtener el ID del usuario autenticado
+        $userId = $_SESSION['id']; // Obtener directamente del $_SESSION
+    
+        if ($userId === null) {
+            header("Location: /404");
+            exit; // Asegúrate de salir después de la redirección
+        }
+    
+        // Llamar al método para eliminar la cuenta del usuario y sus facturas
+        $result = Usuario::eliminarcuentauser($userId);
+    
+        // Verificar si la eliminación fue exitosa
+        if ($result) {
+            // Cerrar sesión y redirigir a la página de inicio
+            session_unset();
+            session_destroy();
+            header("Location: /");
+            exit; // Asegúrate de salir después de la redirección
+        } else {
+            // Manejar el caso donde la eliminación falla
+            $error = "Error al eliminar la cuenta. Por favor, inténtalo de nuevo.";
+            $router->render("profile/verPerfil", [
+                "title" => "Perfil",
+                "error" => $error
+            ]);
+        }
+    }
+    
+    // Método para verificar si el usuario está autenticado
+    private static function isAuth()
+    {
+        // Asegúrate de iniciar la sesión si no está ya iniciada
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    
+        // Verifica si el ID del usuario está en la sesión con la clave 'id'
+        return isset($_SESSION['id']);
+    }
 }
+    
+ 
+    
+    
+
 ?>
