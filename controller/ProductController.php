@@ -1,5 +1,7 @@
 <?php
 
+// Requiere los archivos necesarios para el funcionamiento del controlador.
+
 require_once __DIR__ . "/../Router.php";
 require_once __DIR__ . "/../model/Product.php";
 require_once __DIR__ . "/../model/Category.php";
@@ -162,7 +164,7 @@ class ProductController
             // Verificar si la categoría existe
             if (!Category::categoriaExiste($id_categoria)) {
                 $router->render('products/actualizarProducto', [
-                    'title' => 'Categoría no encontrada',
+                    'title' => '',
                     'resultado' => 'Error: La categoría especificada no existe.',
                     'producto' => Product::encontrarProducto($id_producto),
                     'categorias' => Category::verCategorias() // Pasar las categorías al formulario

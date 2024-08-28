@@ -1,5 +1,7 @@
 <?php
 
+// Requiere los archivos necesarios para el funcionamiento del controlador.
+
 require_once __DIR__ . "/../Router.php";
 require_once __DIR__ . "/../model/Usuario.php";
 require_once __DIR__ . "/../helpers/functions.php";
